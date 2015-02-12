@@ -1,0 +1,135 @@
+# This file provides the language dependent support in the main Makefile.
+# Each language makefile fragment must provide the following targets:
+#
+# foo.all.cross, foo.start.encap, foo.rest.encap,
+# foo.install-common, foo.install-man, foo.install-info, foo.install-pdf,
+# foo.info, foo.dvi, foo.pdf, foo.html, foo.uninstall,
+# foo.mostlyclean, foo.clean, foo.distclean,
+# foo.maintainer-clean, foo.stage1, foo.stage2, foo.stage3, foo.stage4
+#
+# where `foo' is the name of the language.
+
+sfe: sfe1$(exeext) gsfe$(exeext)
+
+.PHONY: sfe
+
+CFLAGS-sfe/gsfe.o += $(DRIVER_DEFINES)
+
+GCCSFE_OBJS = $(GCC_OBJS) sfe/gsfe.o
+gsfe$(exeext): $(GCCSFE_OBJS) $(EXTRA_GCC_OBJS) libcommon-target.a $(LIBDEPS)
+	+$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+	  $(GCCSFE_OBJS) $(EXTRA_GCC_OBJS) libcommon-target.a \
+	  $(EXTRA_GCC_LIBS) $(LIBS)
+
+AST_CPP_FILES := $(wildcard $(srcdir)/sfe/ast/*.cpp)
+AST_OBJ_FILES := $(addprefix sfe/ast/,$(notdir $(AST_CPP_FILES:.cpp=.o)))
+
+AST_DECL_CPP_FILES := $(wildcard $(srcdir)/sfe/ast/decl/*.cpp)
+AST_DECL_OBJ_FILES := $(addprefix sfe/ast/decl/,$(notdir $(AST_DECL_CPP_FILES:.cpp=.o)))
+
+AST_EXPR_CPP_FILES := $(wildcard $(srcdir)/sfe/ast/expr/*.cpp)
+AST_EXPR_OBJ_FILES := $(addprefix sfe/ast/expr/,$(notdir $(AST_EXPR_CPP_FILES:.cpp=.o)))
+
+AST_STMT_CPP_FILES := $(wildcard $(srcdir)/sfe/ast/stmt/*.cpp)
+AST_STMT_OBJ_FILES := $(addprefix sfe/ast/stmt/,$(notdir $(AST_STMT_CPP_FILES:.cpp=.o)))
+
+PARSER_CPP_FILES := $(wildcard $(srcdir)/sfe/parser/*.cpp)
+PARSER_OBJ_FILES := $(addprefix sfe/parser/,$(notdir $(PARSER_CPP_FILES:.cpp=.o)))
+
+SFE_OBJS = sfe/sfe1.o sfe/sfe-lang.o $(AST_OBJ_FILES) $(AST_DECL_OBJ_FILES) $(AST_EXPR_OBJ_FILES) $(AST_STMT_OBJ_FILES) $(PARSER_OBJ_FILES)
+
+# core compiler sfe1
+sfe1$(exeext): $(SFE_OBJS) attribs.o $(BACKEND) $(LIBDEPS)
+	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+	   $(SFE_OBJS) attribs.o $(BACKEND) $(LIBS) $(BACKENDLIBS)
+
+sfe/sfe1.o: sfe/sfe1.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
+  $(FLAGS_H) toplev.h $(GGC_H) $(TREE_H) $(DIAGNOSTIC_H) \
+  input.h options.h opts.h insn-modes.h \
+  sfe/sfe-lang.h gtype-sfe.h gcov-iov.h gt-sfe-sfe1.h
+
+sfe/sfe-lang.o: $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
+  $(FLAGS_H) toplev.h $(GGC_H) $(TREE_H) $(DIAGNOSTIC_H) \
+  input.h options.h opts.h insn-modes.h
+
+sfe/gsfe.o: sfe/gsfe.c $(CONFIG_H) $(SYSTEM_H) \
+  coretypes.h $(DIAGNOSTIC_H) $(TREE_H) $(FLAGS_H) toplev.h langhooks.h $(TM_H)
+
+SFEINCLUDES = -I $(srcdir)/sfe
+
+sfe/ast/.deps:
+	mkdir -p sfe/ast/.deps
+
+sfe/ast/decl/.deps: sfe/ast/.deps
+	mkdir -p sfe/ast/decl/.deps
+
+sfe/ast/expr/.deps: sfe/ast/.deps
+	mkdir -p sfe/ast/expr/.deps
+
+sfe/ast/stmt/.deps: sfe/ast/.deps
+	mkdir -p sfe/ast/stmt/.deps
+
+sfe/parser/.deps:
+	mkdir -p sfe/parser/.deps
+
+sfe/ast/%.o: sfe/ast/%.cpp $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
+  $(FLAGS_H) toplev.h $(GGC_H) $(TREE_H) $(DIAGNOSTIC_H) \
+  input.h options.h opts.h insn-modes.h \
+  | sfe/ast/.deps sfe/ast/decl/.deps sfe/ast/expr/.deps sfe/ast/stmt/.deps
+	$(COMPILE) $(SFEINCLUDES) $<
+	$(POSTCOMPILE)
+
+sfe/parser/%.o: sfe/parser/%.cpp $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
+  $(FLAGS_H) toplev.h $(GGC_H) $(TREE_H) $(DIAGNOSTIC_H) \
+  input.h options.h opts.h insn-modes.h \
+  | sfe/parser/.deps
+	$(COMPILE) $(SFEINCLUDES) $<
+	$(POSTCOMPILE)
+
+sfe.srcextra:
+
+sfe.all.cross:
+
+sfe.start.encap:
+sfe.rest.encap:
+sfe.man:
+sfe.srcman:
+
+sfe.tags: force
+	cd $(srcdir)/sfe;\
+	etags -o TAGS.sub *.y *.l *.c *.h; ast/*.h ast/*.cpp \
+	etags --include TAGS.sub --include ../TAGS.sub
+sfe.info:
+sfe.srcinfo:
+sfe.dvi:
+sfe.pdf:
+doc/sfe.info:
+doc/sfe.dvi:
+doc/sfe.pdf:
+sfe.html:
+
+.phony:sfe.install.common
+.phony:sfe.install
+
+sfe.install-common:
+sfe.install-info:
+sfe.install-pdf:
+sfe.install-man:
+
+# Stage hooks:
+# The main makefile has already created stage?/sfe.
+
+sfe.stage1: stage1-start
+	-mv sfe/*$(objext) stage1/sfe
+sfe.stage2: stage2-start
+	-mv sfe/*$(objext) stage2/sfe
+sfe.stage3: stage3-start
+	-mv sfe/*$(objext) stage3/sfe
+sfe.stage4: stage4-start
+	-mv sfe/*$(objext) stage4/sfe
+sfe.stageprofile: stageprofile-start
+	-mv sfe/*$(objext) stageprofile/sfe
+sfe.stagefeedback: stagefeedback-start
+	-mv sfe/*$(objext) stagefeedback/sfe
+
+config.status: sfe/config-lang.in

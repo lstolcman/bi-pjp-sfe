@@ -1,0 +1,16 @@
+# Configure looks for the existence of this file to auto-config each language.
+# We define several parameters used by configure:
+#
+# language	- name of language as it would appear in $(LANGUAGES)
+# compilers	- value to add to $(COMPILERS)
+# diff_excludes	- files to ignore when building diffs between two versions.
+
+language="sfe"
+
+compilers="sfe1\$(exeext)"
+
+lang_requires_boot_languages=c++
+
+build_by_default="no"
+
+gtfiles="\$(srcdir)/sfe/sfe1.c"
