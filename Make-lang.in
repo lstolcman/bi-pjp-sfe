@@ -36,7 +36,7 @@ AST_STMT_OBJ_FILES := $(addprefix sfe/ast/stmt/,$(notdir $(AST_STMT_CPP_FILES:.c
 PARSER_CPP_FILES := $(wildcard $(srcdir)/sfe/parser/*.cpp)
 PARSER_OBJ_FILES := $(addprefix sfe/parser/,$(notdir $(PARSER_CPP_FILES:.cpp=.o)))
 
-SFE_OBJS = sfe/sfe1.o sfe/sfe-lang.o $(AST_OBJ_FILES) $(AST_DECL_OBJ_FILES) $(AST_EXPR_OBJ_FILES) $(AST_STMT_OBJ_FILES) $(PARSER_OBJ_FILES)
+SFE_OBJS := sfe/sfe1.o sfe/sfe-lang.o $(AST_OBJ_FILES) $(AST_DECL_OBJ_FILES) $(AST_EXPR_OBJ_FILES) $(AST_STMT_OBJ_FILES) $(PARSER_OBJ_FILES)
 
 # core compiler sfe1
 sfe1$(exeext): $(SFE_OBJS) attribs.o $(BACKEND) $(LIBDEPS)

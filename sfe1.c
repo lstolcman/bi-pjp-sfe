@@ -179,6 +179,13 @@ void register_global_variable_declaration(tree variableDecl) {
 
 /* parsing language hook */
 void sfe_parse_file () {
+
+/*  for(unsigned i = 0; i < filename_count; i++) {
+    printf("Parsing: %s\n", filenames[i]);
+    sfe_parse(filenames[i]);
+    break;
+  }*/
+  
   tree func_type_tree = build_function_type_list(integer_type_node, NULL_TREE);
   tree func_decl_tree = build_decl(BUILTINS_LOCATION, FUNCTION_DECL, get_identifier("main"), func_type_tree);
   
