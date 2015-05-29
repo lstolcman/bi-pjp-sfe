@@ -50,7 +50,8 @@ sfe/sfe1.o: sfe/sfe1.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
 
 sfe/sfe-lang.o: $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) \
   $(FLAGS_H) toplev.h $(GGC_H) $(TREE_H) $(DIAGNOSTIC_H) \
-  input.h options.h opts.h insn-modes.h
+  input.h options.h opts.h insn-modes.h \
+  sfe/sfe-lang.h gtype-sfe.h gcov-iov.h gt-sfe-sfe1.h
 
 sfe/gsfe.o: sfe/gsfe.c $(CONFIG_H) $(SYSTEM_H) \
   coretypes.h $(DIAGNOSTIC_H) $(TREE_H) $(FLAGS_H) toplev.h langhooks.h $(TM_H)
