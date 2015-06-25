@@ -52,6 +52,7 @@
 
 #include "print-tree.h"
 #include "tree-cfg.h"
+#include "tree-pretty-print.h"
 
 void register_global_function_declaration(tree functionDecl);
 

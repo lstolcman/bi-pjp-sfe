@@ -75,7 +75,7 @@ bool sfe_init (void) {
 }
 
 // copy of c_genericize function from c-family/c-gimplify.c
-void tree_dump_original (tree fndecl) {
+void tree_dump_original_function (tree fndecl) {
   FILE *dump_orig;
   int local_dump_flags;
   struct cgraph_node *cgn;
@@ -88,13 +88,15 @@ void tree_dump_original (tree fndecl) {
       fprintf (dump_orig, ";; enabled by -%s\n", dump_flag_name (TDI_original));
       fprintf (dump_orig, "\n");
 
-      if (local_dump_flags & TDF_RAW) dump_node (DECL_SAVED_TREE (fndecl), TDF_SLIM | local_dump_flags, dump_orig);
+      if (local_dump_flags & TDF_RAW) dump_node (fndecl, TDF_SLIM | local_dump_flags, dump_orig);
       else {
         struct function fn;
         fn.decl = fndecl;
         fn.curr_properties = 0;
         fn.cfg = NULL;
         DECL_STRUCT_FUNCTION(fndecl) = &fn;
+        print_generic_expr (dump_orig, TREE_TYPE( DECL_RESULT (fndecl)), dump_flags);
+        fprintf (dump_orig, " ");
         dump_function_to_file(fndecl, dump_orig, 0);
         DECL_STRUCT_FUNCTION(fndecl) = NULL;
       }
@@ -105,13 +107,36 @@ void tree_dump_original (tree fndecl) {
 
   /* Dump all nested functions now.  */
   cgn = cgraph_node::get_create (fndecl);
-  for (cgn = cgn->nested; cgn ; cgn = cgn->next_nested) tree_dump_original (cgn->decl);
+  for (cgn = cgn->nested; cgn ; cgn = cgn->next_nested) tree_dump_original_function (cgn->decl);
+}
+
+// copy of c_genericize function from c-family/c-gimplify.c
+void tree_dump_original_variable (tree vardecl) {
+  FILE *dump_orig;
+  int local_dump_flags;
+
+  /* Dump the C-specific tree IR.  */
+  dump_orig = dump_begin (TDI_original, &local_dump_flags);
+  if (dump_orig) {
+      fprintf (dump_orig, "\n;; Variable %s", lang_hooks.decl_printable_name (vardecl, 2));
+      fprintf (dump_orig, "\n;; enabled by -%s\n", dump_flag_name (TDI_original));
+      fprintf (dump_orig, "\n");
+
+      if (local_dump_flags & TDF_RAW) dump_node (vardecl, TDF_SLIM | local_dump_flags, dump_orig);
+      else {
+        print_generic_expr (dump_orig, TREE_TYPE( vardecl), dump_flags);
+        fprintf (dump_orig, " %s;", lang_hooks.decl_printable_name (vardecl, 2));
+      }
+      fprintf (dump_orig, "\n");
+
+      dump_end (TDI_original, dump_orig);
+    }
 }
 
 void register_global_function_declaration(tree functionDecl) {
   vec_safe_push( sfe_global_decls_vec, functionDecl );
   
-  tree_dump_original(functionDecl);
+  tree_dump_original_function(functionDecl);
 
   // Prepare the function for the GCC middle-end
   gimplify_function_tree(functionDecl);
@@ -120,16 +145,15 @@ void register_global_function_declaration(tree functionDecl) {
 
 void register_global_variable_declaration(tree variableDecl) {
   vec_safe_push( sfe_global_decls_vec, variableDecl );
+
+  tree_dump_original_variable(variableDecl);
 }
 
-/* parsing language hook */
-void sfe_parse_file () {
-
-/*  for(unsigned i = 0; i < filename_count; i++) {
+void sfe_parse_input_files(const char** filenames, unsigned filename_count) {
+  
+  for(unsigned i = 0; i < filename_count; i++) {
     printf("Parsing: %s\n", filenames[i]);
-    sfe_parse(filenames[i]);
-    break;
-  }*/
+  }
   
   tree func_type_tree = build_function_type_list(integer_type_node, NULL_TREE);
   tree func_decl_tree = build_decl(BUILTINS_LOCATION, FUNCTION_DECL, get_identifier("main"), func_type_tree);
@@ -161,6 +185,11 @@ void sfe_parse_file () {
   DECL_SAVED_TREE(func_decl_tree) = build3(BIND_EXPR, void_type_node, NULL_TREE, func_stmts_tree, func_art_block_tree);
 
   register_global_function_declaration(func_decl_tree);
+}
+
+/* parsing language hook */
+void sfe_parse_file () {
+  sfe_parse_input_files (in_fnames, num_in_fnames);
 }
 
 /* language dependent wrapup */
