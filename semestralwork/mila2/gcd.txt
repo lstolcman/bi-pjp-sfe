@@ -1,0 +1,16 @@
+{vypocet nejvetsiho spolecneho delitele}
+const a = 84, b = 36;
+var x, y, c;
+begin
+   c := a + c * 2;
+   read x;
+   read y;
+   write x;
+   write y;
+   while x <> y do
+      if x > y then 
+	 x:= x - y
+      else
+	 y:= y - x;
+   write x;
+end
