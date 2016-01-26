@@ -1,3 +1,10 @@
+#include "ast/lexan.h"
+#include "ast/parser.h"
+#include "ast/tree.h"
+#include "ast/output.h"
+#include "ast/tabsym.h"
+#include "ast/input.h"
+
 #include "sfe-lang.h"
 #include "sfe1.h"
 
@@ -182,10 +189,26 @@ void register_global_variable_declaration(tree variableDecl)
 void sfe_parse_input_files(const char * *filenames, unsigned filename_count)
 {
 
+	if (filename_count != 1)
+	{
+		printf("provide one source file as an input\n");
+		return;
+	}
+
 	for(unsigned i = 0; i < filename_count; i++)
 	{
 		printf("Parsing: %s\n", filenames[i]);
 	}
+
+	if(!initParser((char*)filenames[0]))
+	{
+		printf("Error creating the syntax analyzer.\n");
+		return;
+	}
+
+	Prog *prog = Program();
+
+
 
 	tree func_type_tree = build_function_type_list(integer_type_node, NULL_TREE);
 	tree func_decl_tree = build_decl(BUILTINS_LOCATION, FUNCTION_DECL, get_identifier("main"), func_type_tree);
