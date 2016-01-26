@@ -117,8 +117,8 @@ Node* Bop::Optimize()
 {
 	left = (Expr*) left->Optimize();
 	right = (Expr*) right->Optimize();
-	Numb *l = dynamic_cast<Numb*>(left);
-	Numb *r = dynamic_cast<Numb*>(right);
+	Numb *l = static_cast<Numb*>(left);
+	Numb *r = static_cast<Numb*>(right);
 
 	if (!l || !r)
 	{
@@ -180,7 +180,7 @@ Node* Bop::Optimize()
 Node* UnMinus::Optimize()
 {
 	expr = (Expr*) expr->Optimize();
-	Numb *e = dynamic_cast<Numb*>(expr);
+	Numb *e = static_cast<Numb*>(expr);
 
 	if (!e)
 	{
@@ -218,7 +218,7 @@ Node* If::Optimize()
 	{
 		elsestm = (Statm*)(elsestm->Optimize());
 	}
-	Numb *c = dynamic_cast<Numb*>(cond);
+	Numb *c = static_cast<Numb*>(cond);
 
 	if (!c)
 	{
@@ -242,7 +242,7 @@ Node* While::Optimize()
 {
 	cond = (Expr*)(cond->Optimize());
 	body = (Statm*)(body->Optimize());
-	Numb *c = dynamic_cast<Numb*>(cond);
+	Numb *c = static_cast<Numb*>(cond);
 
 	if (!c)
 	{
