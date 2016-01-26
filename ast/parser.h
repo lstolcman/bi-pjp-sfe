@@ -4,4 +4,3 @@
 
 Prog* Program();
 int initParser(char*);
-

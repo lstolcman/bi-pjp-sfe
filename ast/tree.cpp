@@ -260,6 +260,7 @@ Node* While::Optimize()
 Node* StatmList::Optimize()
 {
 	StatmList *s = this;
+
 	do {
 		s->statm = (Statm*)(s->statm->Optimize());
 		s = s->next;
@@ -356,6 +357,7 @@ void While::Translate()
 void StatmList::Translate()
 {
 	StatmList *s = this;
+
 	do {
 		s->statm->Translate();
 		s = s->next;

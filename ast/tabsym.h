@@ -7,4 +7,3 @@ void declVar(char*);
 int varAddr(char*);
 TypeId varConstId(char*, int*);
 void freeSymbTab();
-

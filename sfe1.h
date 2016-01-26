@@ -1,29 +1,29 @@
 /* TREELANG Compiler definitions for interfacing to treetree.c
    (compiler back end interface).
-   
+
    Copyright (C) 1986, 87, 89, 92-96, 1997, 1999, 2000, 2001, 2002, 2003,
    2004, 2005, 2007 Free Software Foundation, Inc.
-   
+
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
    Free Software Foundation; either version 3, or (at your option) any
    later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program; see the file COPYING3.  If not see
    <http://www.gnu.org/licenses/>.
-   
+
    In other words, you are welcome to use, share and improve this program.
    You are forbidden to forbid anyone else to use, share and improve
-   what you give them. Help stamp out software-hoarding!  
-   
+   what you give them. Help stamp out software-hoarding!
+
    ---------------------------------------------------------------------------
-   
+
    Written by Tim Josling 1999, 2000, 2001, based in part on other
    parts of the GCC compiler.  */
 
@@ -31,14 +31,14 @@ bool sfe_init (void);
 
 void sfe_finish (void);
 
-void sfe_init_options (unsigned int, struct cl_decoded_option *);
+void sfe_init_options (unsigned int, struct cl_decoded_option*);
 
 bool sfe_handle_option (size_t scode, const char *arg,
-		   int value ATTRIBUTE_UNUSED, int kind ATTRIBUTE_UNUSED,
-		   location_t loc ATTRIBUTE_UNUSED,
-		   const struct cl_option_handlers *handlers ATTRIBUTE_UNUSED);
+                        int value ATTRIBUTE_UNUSED, int kind ATTRIBUTE_UNUSED,
+                        location_t loc ATTRIBUTE_UNUSED,
+                        const struct cl_option_handlers*handlers ATTRIBUTE_UNUSED);
 
-bool sfe_post_options (const char **);
+bool sfe_post_options (const char**);
 
 unsigned int sfe_option_lang_mask(void);
 
@@ -55,7 +55,7 @@ static tree pushdecl (tree decl);
 
 /* Langhooks.  */
 const struct attribute_spec sfe_attribute_table[] = {
-  { NULL,                     0, 0, false, false, false, NULL, false }
+	{ NULL,                     0, 0, false, false, false, NULL, false }
 };
 
 static void sfe_write_globals (void);

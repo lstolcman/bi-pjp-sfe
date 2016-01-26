@@ -9,8 +9,8 @@
 /**
  * statically defined array of symbol to store individual lines
  */
-char  line[MAX_LINE_LENGTH];
-int   lineNumber = 0;
+char line[MAX_LINE_LENGTH];
+int lineNumber = 0;
 char *linePointer = line;
 FILE *inputFile;
 int extendedLine = 0;
@@ -19,42 +19,58 @@ int extendedLine = 0;
  * initialisation of input to a standard input or to a file input
  * standard input is selected if fileName is NULL
  */
-int initInput(char* fileName) {
-  if (!fileName) {
-    inputFile = stdin;
-  } else {
-    inputFile = fopen(fileName, "rt");
-    if (!inputFile) {
-      printf("Input file %s not found.\n", fileName);
-      return 0;
-    }
-  }
-  return 1;
+int initInput(char *fileName)
+{
+	if (!fileName)
+	{
+		inputFile = stdin;
+	}
+	else
+	{
+		inputFile = fopen(fileName, "rt");
+
+		if (!inputFile)
+		{
+			printf("Input file %s not found.\n", fileName);
+			return 0;
+		}
+	}
+	return 1;
 }
 
-void closeInput() {
-  fclose(inputFile);
+void closeInput()
+{
+	fclose(inputFile);
 }
 
 /**
  * will read single symbol from input
  */
-int getChar() {
-  if (!*linePointer) {
-    if (!fgets(line, MAX_LINE_LENGTH, inputFile)) return EOF;
+int getChar()
+{
+	if (!*linePointer)
+	{
+		if (!fgets(line, MAX_LINE_LENGTH, inputFile))
+		{
+			return EOF;
+		}
 
-    linePointer = line;
-    lineNumber++;
+		linePointer = line;
+		lineNumber++;
 
-    int lineLength = strlen(line);
-    if (extendedLine) {
-      lineNumber--;
-      printf("+    %s", line);
-    } else {
-      printf("%-4d %s", lineNumber, line);
-    }
+		int lineLength = strlen(line);
 
-    extendedLine = line[lineLength - 1] != '\n';
-  }
-  return *linePointer++;
+		if (extendedLine)
+		{
+			lineNumber--;
+			printf("+    %s", line);
+		}
+		else
+		{
+			printf("%-4d %s", lineNumber, line);
+		}
+
+		extendedLine = line[lineLength - 1] != '\n';
+	}
+	return *linePointer++;
 }

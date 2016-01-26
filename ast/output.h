@@ -4,12 +4,12 @@
 #define _OUTPUT_
 
 enum InstrType {
-   TA, TC, BOP, UNM, DR, ST, IFJ, JU, WRT, RD, DUP, SWAP, STOP
+	TA, TC, BOP, UNM, DR, ST, IFJ, JU, WRT, RD, DUP, SWAP, STOP
 };
 enum Operator {
-   Plus, Minus, Times, Divide,
-   Eq, NotEq, Less, Greater, LessOrEq, GreaterOrEq,
-   Error
+	Plus, Minus, Times, Divide,
+	Eq, NotEq, Less, Greater, LessOrEq, GreaterOrEq,
+	Error
 };
 
 int Gener(InstrType, int = 0);
