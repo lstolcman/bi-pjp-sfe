@@ -1,5 +1,9 @@
 
 begin
-	write 12345;
+	write 0;
+	write 1;
+	write 10;
+	write 123;
+	write 123456;
 end
 

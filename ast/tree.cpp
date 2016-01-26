@@ -368,9 +368,63 @@ tree Numb::Translate()
 
 tree Bop::Translate()
 {
-	left->Translate();
-	right->Translate();
-	Gener(BOP, op);
+	//left->Translate();
+	//right->Translate();
+	//Gener(BOP, op);
+
+	switch (op)
+	{
+	case Plus:
+		return build2(PLUS_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Minus:
+		return build2(MINUS_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Times:
+		return build2(MULT_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Divide:
+		#warning TRUNC_DIV_EXPR
+		return build2(TRUNC_DIV_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Eq:
+		#warning case Eq:
+		return build2(EQ_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case NotEq:
+		#warning case NotEq:
+		return build2(NE_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Less:
+		#warning case Less:
+		return build2(LT_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Greater:
+		#warning case Greater:
+		return build2(GT_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case LessOrEq:
+		#warning case LessOrEq:
+		return build2(LE_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case GreaterOrEq:
+		#warning case GreaterOrEq:
+		return build2(GE_EXPR, integer_type_node, left->Translate(), right->Translate());
+		break;
+
+	case Error: //cannot happen
+		error("Bop::Translate\nop Error\n");
+		break;
+	}
 }
 
 tree UnMinus::Translate()
