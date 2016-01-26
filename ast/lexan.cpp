@@ -68,7 +68,9 @@ void readInput(void)
 /**
  * list of available keywords with appropriate lexical element
  */
-const struct {const char *slovo; LexSymbolType symb; } keyWordTable[] = {
+const struct {const char *slovo;
+	      LexSymbolType symb;
+} keyWordTable[] = {
 	{"var", kwVAR},
 	{"const", kwCONST},
 	{"begin", kwBEGIN},

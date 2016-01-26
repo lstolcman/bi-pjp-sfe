@@ -30,7 +30,7 @@ tree Node::build_print_integer_expr (location_t loc, tree int_expr)
 {
 	tree string = Node::build_string_constant("%d\n", true);
 
-	tree * args_vec = XNEWVEC( tree, 2 );
+	tree *args_vec = XNEWVEC( tree, 2 );
 	args_vec[0] = build1(ADDR_EXPR, build_pointer_type(TREE_TYPE(string)), string);
 	args_vec[1] = int_expr;
 
@@ -64,7 +64,8 @@ tree Node::build_print_integer_expr (location_t loc, tree int_expr)
 
 Var::Var(int a, bool rv)
 {
-	addr = a; rvalue = rv;
+	addr = a;
+	rvalue = rv;
 }
 
 Numb::Numb (int v)
@@ -79,12 +80,15 @@ int Numb::Value()
 
 Bop::Bop(Operator o, Expr *l, Expr *r)
 {
-	op = o; left = l; right = r;
+	op = o;
+	left = l;
+	right = r;
 }
 
 Bop::~Bop()
 {
-	delete left; delete right;
+	delete left;
+	delete right;
 }
 
 UnMinus::UnMinus(Expr *e)
@@ -99,12 +103,14 @@ UnMinus::~UnMinus()
 
 Assign::Assign(Var *v, Expr *e)
 {
-	var = v; expr = e;
+	var = v;
+	expr = e;
 }
 
 Assign::~Assign()
 {
-	delete var; delete expr;
+	delete var;
+	delete expr;
 }
 
 Write::Write(Expr *e)
@@ -129,32 +135,40 @@ Read::~Read()
 
 If::If(Expr *c, Statm *ts, Statm *es)
 {
-	cond = c; thenstm = ts; elsestm = es;
+	cond = c;
+	thenstm = ts;
+	elsestm = es;
 }
 
 If::~If()
 {
-	delete cond; delete thenstm; delete elsestm;
+	delete cond;
+	delete thenstm;
+	delete elsestm;
 }
 
 While::While(Expr *c, Statm *b)
 {
-	cond = c; body = b;
+	cond = c;
+	body = b;
 }
 
 While::~While()
 {
-	delete body; delete cond;
+	delete body;
+	delete cond;
 }
 
 StatmList::StatmList(Statm *s, StatmList *n)
 {
-	statm = s; next = n;
+	statm = s;
+	next = n;
 }
 
 StatmList::~StatmList()
 {
-	delete statm; delete next;
+	delete statm;
+	delete next;
 }
 
 Prog::Prog(StatmList *s)
@@ -284,11 +298,13 @@ Node* If::Optimize()
 
 	if (c->Value())
 	{
-		res = thenstm; thenstm = 0;
+		res = thenstm;
+		thenstm = 0;
 	}
 	else
 	{
-		res = elsestm; elsestm = 0;
+		res = elsestm;
+		elsestm = 0;
 	}
 	delete this;
 	return res;
@@ -317,7 +333,8 @@ Node* StatmList::Optimize()
 {
 	StatmList *s = this;
 
-	do {
+	do
+	{
 		s->statm = (Statm*)(s->statm->Optimize());
 		s = s->next;
 	}
@@ -417,7 +434,8 @@ tree StatmList::Translate()
 	StatmList *s = this;
 	tree func_stmts_tree = alloc_stmt_list();
 
-	do {
+	do
+	{
 		append_to_statement_list(s->statm->Translate(), &func_stmts_tree);
 		s = s->next;
 	}

@@ -233,7 +233,8 @@ void Run()
 
 			if(res != 1)
 			{
-				printf("I/O Error.\n\n"); return;
+				printf("I/O Error.\n\n");
+				return;
 			}
 			z[++v] = tmp;
 			break;

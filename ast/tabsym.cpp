@@ -17,7 +17,9 @@ TabElement::TabElement(char *i, TypeId d, int h, TabElement *n)
 {
 	ident = new char[strlen(i)+1];
 	strcpy(ident, i);
-	type = d; value = h; next = n;
+	type = d;
+	value = h;
+	next = n;
 }
 
 static TabElement *TabSym;
