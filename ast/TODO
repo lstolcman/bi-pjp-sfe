@@ -1,0 +1,38 @@
+TODO parser:
+
+5%:
+1	Main function
+1	printing numbers
+1	reading numbers
+1	global variables support
+1	expressions
+1	assignment
+0	number constants in decadic base: base solution
+0	Number constants in hexadecimal and octal base (c like)
+
+10%:
+1/2	If (along with exit statement)
+1/2	While (along with exit statement)
+
+10%:
+0	For (to and downto; allong with exit statement)
+
+10%:
+0	Nested blocks
+
+15%:
+0	Statically allocated arrays (indexed in any interval)
+
+15%:
+0	Procedures, Functions, Local variables
+
+10%:
+0	Parameters of functions and procedures
+
+10%:
+0	Recursion
+
+15%:
+0	Indirect recursion
+
+

@@ -1,0 +1,38 @@
+TODO sfe1:
+
+5%:
+0	Main function
+0	printing numbers
+0	reading numbers
+0	global variables support
+0	expressions
+0	assignment
+0	number constants in decadic base: base solution
+0	Number constants in hexadecimal and octal base (c like)
+
+10%:
+0	If (along with exit statement)
+0	While (along with exit statement)
+
+10%:
+0	For (to and downto; allong with exit statement)
+
+10%:
+0	Nested blocks
+
+15%:
+0	Statically allocated arrays (indexed in any interval)
+
+15%:
+0	Procedures, Functions, Local variables
+
+10%:
+0	Parameters of functions and procedures
+
+10%:
+0	Recursion
+
+15%:
+0	Indirect recursion
+
+
