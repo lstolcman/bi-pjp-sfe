@@ -230,6 +230,14 @@ void sfe_parse_input_files(const char * *filenames, unsigned filename_count)
 
 	tree func_stmts_tree = alloc_stmt_list();
 
+
+
+
+	append_to_statement_list(prog->Translate(), &func_stmts_tree);
+
+
+
+
 	tree set_return_val = build2(MODIFY_EXPR, TREE_TYPE(func_result_tree), func_result_tree, build_int_cstu(integer_type_node, 0));
 
 	append_to_statement_list(set_return_val, &func_stmts_tree);

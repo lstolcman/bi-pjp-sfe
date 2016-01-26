@@ -4,7 +4,63 @@
 #include "tabsym.h"
 #include <new>          // ::operator new
 
-// konstructors a destructors
+// constructors and destructors
+
+tree Node::build_string_constant(const char *string, int isConst)
+{
+	int length = strlen(string);
+	// the string is just array of const chars so index_type and const_char_type
+	// are obviously needed, size_int calls build_int_cst with type stk_sizetype
+	// (normal representation of size in bytes) and the size is the size of the string
+	tree index_type = build_index_type(size_int(length));
+	tree const_char_type = isConst ? build_qualified_type(unsigned_char_type_node, TYPE_QUAL_CONST) : unsigned_char_type_node;
+	// then the string type is the array of const chars with known size
+	tree string_type = build_array_type(const_char_type, index_type);
+	// for c/c++ not important but some languages may distinguis strings and arrays of chars viz tree.def
+	TYPE_STRING_FLAG(string_type) = 1;
+	// actual building of string
+	tree res = build_string(length+1, string);
+	//and the builded tree is of string type
+	TREE_TYPE(res) = string_type;
+
+	return res;
+}
+
+tree Node::build_print_integer_expr (location_t loc, tree int_expr)
+{
+	tree string = Node::build_string_constant("%d\n", true);
+
+	tree * args_vec = XNEWVEC( tree, 2 );
+	args_vec[0] = build1(ADDR_EXPR, build_pointer_type(TREE_TYPE(string)), string);
+	args_vec[1] = int_expr;
+
+	tree params = NULL_TREE;
+	chainon( params, tree_cons (NULL_TREE, TREE_TYPE(args_vec[0]), NULL_TREE) );
+	chainon( params, tree_cons (NULL_TREE, TREE_TYPE(args_vec[1]), NULL_TREE) );
+
+	// function parameters
+	tree param_decl = NULL_TREE;
+
+	tree resdecl = build_decl (BUILTINS_LOCATION, RESULT_DECL, NULL_TREE, integer_type_node);
+	DECL_ARTIFICIAL(resdecl) = true;
+	DECL_IGNORED_P(resdecl) = true;
+
+	tree fntype = build_function_type( TREE_TYPE(resdecl), params );
+	tree fndecl = build_decl( UNKNOWN_LOCATION, FUNCTION_DECL, get_identifier("printf"), fntype );
+	DECL_ARGUMENTS(fndecl) = param_decl;
+
+	DECL_RESULT( fndecl ) = resdecl;
+
+	DECL_ARTIFICIAL(resdecl) = true;
+	DECL_IGNORED_P(resdecl) = true;
+	DECL_EXTERNAL( fndecl ) = true;
+
+	tree call = build_call_expr_loc_array( loc, fndecl, 2, args_vec );
+	SET_EXPR_LOCATION(call, loc);
+	TREE_USED(call) = true;
+
+	return call;
+}
 
 Var::Var(int a, bool rv)
 {
@@ -275,9 +331,9 @@ Node* Prog::Optimize()
 	return this;
 }
 
-// ranslate methods
+// translate methods
 
-void Var::Translate()
+tree Var::Translate()
 {
 	Gener(TA, addr);
 
@@ -287,45 +343,47 @@ void Var::Translate()
 	}
 }
 
-void Numb::Translate()
+tree Numb::Translate()
 {
-	Gener(TC, value);
+	//Gener(TC, value);
+	return build_int_cstu(integer_type_node, value);
 }
 
-void Bop::Translate()
+tree Bop::Translate()
 {
 	left->Translate();
 	right->Translate();
 	Gener(BOP, op);
 }
 
-void UnMinus::Translate()
+tree UnMinus::Translate()
 {
 	expr->Translate();
 	Gener(UNM);
 }
 
-void Assign::Translate()
+tree Assign::Translate()
 {
 	var->Translate();
 	expr->Translate();
 	Gener(ST);
 }
 
-void Write::Translate()
+tree Write::Translate()
 {
-	expr->Translate();
-	Gener(WRT);
+	//expr->Translate();
+	//Gener(WRT);
+	return build_print_integer_expr(UNKNOWN_LOCATION, expr->Translate());
 }
 
-void Read::Translate()
+tree Read::Translate()
 {
 	var->Translate();
 	Gener(RD);
 	Gener(ST);
 }
 
-void If::Translate()
+tree If::Translate()
 {
 	cond->Translate();
 	int a1 = Gener(IFJ);
@@ -344,7 +402,7 @@ void If::Translate()
 	}
 }
 
-void While::Translate()
+tree While::Translate()
 {
 	int a1 = GetIC();
 	cond->Translate();
@@ -354,21 +412,24 @@ void While::Translate()
 	PutIC(a2);
 }
 
-void StatmList::Translate()
+tree StatmList::Translate()
 {
 	StatmList *s = this;
+	tree func_stmts_tree = alloc_stmt_list();
 
 	do {
-		s->statm->Translate();
+		append_to_statement_list(s->statm->Translate(), &func_stmts_tree);
 		s = s->next;
 	}
 	while (s);
+
+	return func_stmts_tree;
 }
 
-void Prog::Translate()
+tree Prog::Translate()
 {
-	stm->Translate();
-	Gener(STOP);
+	return stm->Translate();
+	//Gener(STOP);
 }
 
 Expr* VarOrConst(char *id)
