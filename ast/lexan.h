@@ -7,12 +7,13 @@ typedef enum {
 	IDENT, NUMB, PLUS, MINUS, TIMES, DIVIDE,
 	EQ, NEQ, LT, GT, LTE, GTE, LPAR, RPAR, ASSIGN,
 	COMMA, SEMICOLON,
+	kwPROGRAM,
 	kwVAR, kwCONST, kwBEGIN, kwEND, kwIF, kwTHEN, kwELSE,
 	kwWHILE, kwDO, kwWRITE, kwREAD,
 	EOI, ERR
 } LexSymbolType;
 
-extern const char *symbTable[30];
+extern const char *symbTable[];
 
 /**
  * maximal length of identifier

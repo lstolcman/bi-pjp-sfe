@@ -15,10 +15,11 @@ typedef enum {LETTER, NUMBER, WHITE_SPACE, END, NO_TYPE} InputCharType;
  * Array of string constants for each lexical elements.
  * Symbol string representation is in the same order as in LexSymbolType enum
  */
-const char *symbTable[30] = {
+const char *symbTable[] = {
 	"IDENT", "NUMB", "PLUS", "MINUS", "TIMES", "DIVIDE",
 	"EQ", "NEQ", "LT", "GT", "LTE", "GTE", "LPAR", "RPAR", "ASSIGN",
 	"COMMA", "SEMICOLON",
+	"kwPROGRAM",
 	"kwVAR", "kwCONST", "kwBEGIN", "kwEND", "kwIF", "kwTHEN", "kwELSE",
 	"kwWHILE", "kwDO", "kwWRITE", "kwREAD",
 	"EOI", "ERR"
@@ -71,6 +72,7 @@ void readInput(void)
 const struct {const char *slovo;
 	      LexSymbolType symb;
 } keyWordTable[] = {
+	{"program", kwPROGRAM},
 	{"var", kwVAR},
 	{"const", kwCONST},
 	{"begin", kwBEGIN},

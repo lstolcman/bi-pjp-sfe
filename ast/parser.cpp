@@ -9,7 +9,10 @@
 #include <stdlib.h>
 
 Prog* Program();
+void InitDecl();
+void InitDecl();
 void Decl();
+void DeclProgram();
 void DeclConst();
 void DeclConstPrimed();
 void DeclVar();
@@ -80,8 +83,23 @@ void Compare_NUMB(int *h, int line)
 
 Prog* Program()
 {
+	InitDecl();
 	Decl();
 	return new Prog(CompoundStatement());
+}
+
+void InitDecl()
+{
+	switch(Symb.type)
+	{
+	case kwPROGRAM:
+		DeclProgram();
+		break;
+
+	default:
+		CompareError(Symb.type, __LINE__);
+	}
+	Decl();
 }
 
 void Decl()
@@ -101,6 +119,14 @@ void Decl()
 	default:
 		;
 	}
+}
+
+void DeclProgram()
+{
+	char id[MAX_IDENT_LEN];
+	Symb = readLexem();
+	Compare_IDENT(id, __LINE__);
+	Compare(SEMICOLON, __LINE__);
 }
 
 void DeclConst()

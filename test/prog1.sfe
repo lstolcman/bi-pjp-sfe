@@ -1,0 +1,6 @@
+program prog1;
+
+begin
+	write 123;
+end
+
