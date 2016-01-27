@@ -82,7 +82,10 @@ void declVar(char *id)
 		error(id, "is declared again");
 		return;
 	}
-	TabSym = new TabElement(id, VarId, free_address, TabSym);
+
+
+	//tree declaratiomn = build_decl( .... // from nodes of generic-  variables (1.)
+	//TabSym = new TabElement(id, VarId, /*free_address*/ treedeclaration, TabSym);
 	free_address++;
 }
 

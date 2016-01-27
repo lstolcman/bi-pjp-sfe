@@ -415,8 +415,11 @@ tree Bop::Translate()
 		break;
 
 	case Error: //cannot happen
-		error("Bop::Translate\nop Error\n");
+		error("Bop::Translate\nop error\n");
 		break;
+	
+	default:
+		error("Bop::Translate\nUnknown operator\n");
 	}
 }
 
@@ -501,7 +504,10 @@ tree Prog::Translate()
 Expr* VarOrConst(char *id)
 {
 	int v;
-	TypeId druh = varConstId(id,&v);
+	TypeId druh = varConstId(id,&v); // aquires a tabsym, retrieves some value. retrieved not int but a tree
+
+
+
 
 	switch (druh)
 	{
