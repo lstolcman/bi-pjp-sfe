@@ -1,0 +1,10 @@
+program oct;
+
+begin
+	write 0o00; {0}
+	write 0o07; {7}
+	write 0o20; {16}
+	write 0o22; {18}
+	write 0o77; {63}
+end
+

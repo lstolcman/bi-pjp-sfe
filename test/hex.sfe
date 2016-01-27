@@ -1,0 +1,10 @@
+program hex;
+
+begin
+	write 0x00; {0}
+	write 0x02; {2}
+	write 0x20; {32}
+	write 0x22; {34}
+	write 0xff; {255}
+end
+

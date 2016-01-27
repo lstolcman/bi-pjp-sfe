@@ -265,12 +265,82 @@ q2:
 
 q3:
 
+	switch (character)
+	{
+	case 'x':
+	case 'X':
+		readInput();
+		goto q32;
+
+	case 'o':
+	case 'O':
+		readInput();
+		goto q33;
+
+	default:
+		goto q31;
+	}
+
+q31: //decimal
+
 	switch(input)
 	{
 	case NUMBER:
 		data.number = 10 * data.number + (character - '0');
 		readInput();
-		goto q3;
+		goto q31;
+
+	default:
+		return data;
+	}
+
+q32: //hex
+
+	switch (character)
+	{
+	case 'a':
+	case 'b':
+	case 'c':
+	case 'd':
+	case 'e':
+	case 'f':
+		data.number = 16 * data.number + (character - 'a' + 10);
+		readInput();
+		goto q32;
+
+	case 'A':
+	case 'B':
+	case 'C':
+	case 'D':
+	case 'E':
+	case 'F':
+		data.number = 16 * data.number + (character - 'A' + 10);
+		readInput();
+		goto q32;
+
+	default:
+		;
+	}
+
+	switch(input)
+	{
+	case NUMBER:
+		data.number = 16 * data.number + (character - '0');
+		readInput();
+		goto q32;
+
+	default:
+		return data;
+	}
+
+q33: //octal
+
+	switch(input)
+	{
+	case NUMBER:
+		data.number = 8 * data.number + (character - '0');
+		readInput();
+		goto q33;
 
 	default:
 		return data;
