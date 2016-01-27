@@ -62,6 +62,42 @@ tree Node::build_print_integer_expr (location_t loc, tree int_expr)
 	return call;
 }
 
+tree Node::build_scan_integer (location_t loc, tree var_expr)
+{
+	tree string = build_string_constant( (const char*) "%d", true );
+
+	tree *args_vec = XNEWVEC( tree, 2 );
+	args_vec[0] = build1(ADDR_EXPR, build_pointer_type(TREE_TYPE(string)), string);
+	args_vec[1] = build1(ADDR_EXPR, build_pointer_type(TREE_TYPE(var_expr)), var_expr);
+
+	tree params = NULL_TREE;
+	chainon( params, tree_cons (NULL_TREE, TREE_TYPE(args_vec[0]), NULL_TREE) );
+	chainon( params, tree_cons (NULL_TREE, TREE_TYPE(args_vec[1]), NULL_TREE) );
+
+	// function parameters
+	tree param_decl = NULL_TREE;
+
+	tree resdecl = build_decl (BUILTINS_LOCATION, RESULT_DECL, NULL_TREE, integer_type_node);
+	DECL_ARTIFICIAL(resdecl) = true;
+	DECL_IGNORED_P(resdecl) = true;
+
+	tree fntype = build_function_type( TREE_TYPE(resdecl), params );
+	tree fndecl = build_decl( UNKNOWN_LOCATION, FUNCTION_DECL, get_identifier("scanf"), fntype );
+	DECL_ARGUMENTS(fndecl) = param_decl;
+
+	DECL_RESULT( fndecl ) = resdecl;
+
+	DECL_ARTIFICIAL(resdecl) = true;
+	DECL_IGNORED_P(resdecl) = true;
+	DECL_EXTERNAL( fndecl ) = true;
+
+	tree call = build_call_expr_loc_array( loc, fndecl, 2, args_vec );
+	SET_EXPR_LOCATION(call, loc);
+	TREE_USED(call) = true;
+
+	return call;
+}
+
 Var::Var(tree t)
 {
 	node = t;
@@ -447,9 +483,10 @@ tree Write::Translate()
 
 tree Read::Translate()
 {
-	var->Translate();
+	//var->Translate();
 	//Gener(RD);
 	//Gener(ST);
+	return build_print_integer_expr(UNKNOWN_LOCATION, var->Translate());
 }
 
 tree If::Translate()

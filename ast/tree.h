@@ -27,6 +27,7 @@ public:
 	}
 	tree build_string_constant(const char*, int);
 	tree build_print_integer_expr(location_t, tree);
+	tree build_scan_integer (location_t, tree);
 };
 
 class Expr : public Node
