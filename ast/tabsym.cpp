@@ -60,8 +60,6 @@ TabElement* searchId(char *id)
 
 void declConst(char *id, int val)
 {
-	//do same as declVar - constants as variable
-	//
 	TabElement *p = searchId(id);
 
 	if (p)
@@ -69,6 +67,7 @@ void declConst(char *id, int val)
 		error(id, "is declared again");
 		return;
 	}
+
 	TabSym = new TabElement(id, ConstId, build_int_cstu(integer_type_node, val), TabSym);
 }
 
@@ -93,7 +92,6 @@ void declVar(char *id)
 	TREE_STATIC(declaration) = true;
 	TREE_PUBLIC(declaration) = true;
 
-	// 								p->value ?
 	TabSym = new TabElement(id, VarId, declaration, TabSym);
 
 	free_address++;

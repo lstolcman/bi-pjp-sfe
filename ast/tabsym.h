@@ -36,11 +36,3 @@ void freeSymbTab();
 
 
 TabElement* retTabSym(void);
-
-
-
-
-
-
-
-

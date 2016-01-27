@@ -353,13 +353,13 @@ tree Var::Translate()
 {
 	return node;
 	/*
-	Gener(TA, addr);
+	   Gener(TA, addr);
 
-	if (rvalue)
-	{
-		Gener(DR);
-	}
-	*/
+	   if (rvalue)
+	   {
+	        Gener(DR);
+	   }
+	 */
 }
 
 tree Numb::Translate()
@@ -419,7 +419,7 @@ tree Bop::Translate()
 	case Error: //cannot happen
 		error("Bop::Translate\nop error\n");
 		break;
-	
+
 	default:
 		error("Bop::Translate\nUnknown operator\n");
 	}
@@ -455,32 +455,32 @@ tree Read::Translate()
 tree If::Translate()
 {
 	/*
-	cond->Translate();
-	int a1 = Gener(IFJ);
-	thenstm->Translate();
+	   cond->Translate();
+	   int a1 = Gener(IFJ);
+	   thenstm->Translate();
 
-	if (elsestm)
-	{
-		int a2 = Gener(JU);
-		PutIC(a1);
-		elsestm->Translate();
-		PutIC(a2);
-	}
-	else
-	{
-		PutIC(a1);
-	}*/
+	   if (elsestm)
+	   {
+	        int a2 = Gener(JU);
+	        PutIC(a1);
+	        elsestm->Translate();
+	        PutIC(a2);
+	   }
+	   else
+	   {
+	        PutIC(a1);
+	   }*/
 }
 
 tree While::Translate()
 {
 	/*
-	int a1 = GetIC();
-	cond->Translate();
-	int a2 = Gener(IFJ);
-	body->Translate();
-	Gener(JU, a1);
-	PutIC(a2);*/
+	   int a1 = GetIC();
+	   cond->Translate();
+	   int a2 = Gener(IFJ);
+	   body->Translate();
+	   Gener(JU, a1);
+	   PutIC(a2);*/
 }
 
 tree StatmList::Translate()
@@ -509,16 +509,11 @@ Expr* VarOrConst(char *id)
 	tree t;
 	TypeId druh = varConstId(id, &t); // aquires a tabsym, retrieves some value. retrieved not int but a tree
 
-
-
-
 	switch (druh)
 	{
 	case VarId:
 	case ConstId:
 		return new Var(t);
-
-		//return new Numb(v);
 
 	default:
 		return 0;
