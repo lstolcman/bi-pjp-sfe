@@ -387,37 +387,30 @@ tree Bop::Translate()
 		break;
 
 	case Divide:
-		#warning TRUNC_DIV_EXPR
 		return build2(TRUNC_DIV_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
 	case Eq:
-		#warning case Eq:
 		return build2(EQ_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
 	case NotEq:
-		#warning case NotEq:
 		return build2(NE_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
 	case Less:
-		#warning case Less:
 		return build2(LT_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
 	case Greater:
-		#warning case Greater:
 		return build2(GT_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
 	case LessOrEq:
-		#warning case LessOrEq:
 		return build2(LE_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
 	case GreaterOrEq:
-		#warning case GreaterOrEq:
 		return build2(GE_EXPR, integer_type_node, left->Translate(), right->Translate());
 		break;
 
@@ -429,8 +422,9 @@ tree Bop::Translate()
 
 tree UnMinus::Translate()
 {
-	expr->Translate();
-	Gener(UNM);
+	//expr->Translate();
+	//Gener(UNM);
+	return build1(NEGATE_EXPR, integer_type_node, expr->Translate());
 }
 
 tree Assign::Translate()
