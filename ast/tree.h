@@ -5,7 +5,14 @@
 
 #include "../sfe-lang.h" //for tree type
 
-#include "output.h"
+//#include "output.h"
+
+
+enum Operator {
+	Plus, Minus, Times, Divide,
+	Eq, NotEq, Less, Greater, LessOrEq, GreaterOrEq,
+	Error
+};
 
 class Node
 {
@@ -32,11 +39,10 @@ class Statm : public Node
 
 class Var : public Expr
 {
-	int addr;
-	bool rvalue;
+	tree node;
 
 public:
-	Var(int, bool);
+	Var(tree);
 	virtual tree Translate();
 };
 

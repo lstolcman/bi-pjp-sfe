@@ -4,25 +4,23 @@
 #include <string.h>
 #include <stdio.h>
 
-struct TabElement
-{
-	char *ident;
-	TypeId type;
-	int value;
-	TabElement *next;
-	TabElement(char *i, TypeId d, int h, TabElement *n);
-};
 
-TabElement::TabElement(char *i, TypeId d, int h, TabElement *n)
+
+TabElement::TabElement(char *i, TypeId d, tree nd, TabElement *n)
 {
 	ident = new char[strlen(i)+1];
 	strcpy(ident, i);
 	type = d;
-	value = h;
+	node = nd;
 	next = n;
 }
 
 static TabElement *TabSym;
+
+TabElement* retTabSym(void)
+{
+	return TabSym;
+}
 
 static void error(char *id, const char *txt)
 {
@@ -62,6 +60,8 @@ TabElement* searchId(char *id)
 
 void declConst(char *id, int val)
 {
+	//do same as declVar - constants as variable
+	//
 	TabElement *p = searchId(id);
 
 	if (p)
@@ -69,7 +69,7 @@ void declConst(char *id, int val)
 		error(id, "is declared again");
 		return;
 	}
-	TabSym = new TabElement(id, ConstId, val, TabSym);
+	TabSym = new TabElement(id, ConstId, build_int_cstu(integer_type_node, val), TabSym);
 }
 
 void declVar(char *id)
@@ -83,13 +83,23 @@ void declVar(char *id)
 		return;
 	}
 
+	// build node GENERIC
+	tree declaration = build_decl(UNKNOWN_LOCATION, VAR_DECL, get_identifier(id), integer_type_node);
+	TREE_ADDRESSABLE(declaration) = true;
+	TREE_USED(declaration) = true;
+	DECL_INITIAL(declaration) = build_int_cstu(integer_type_node, 0);
 
-	//tree declaratiomn = build_decl( .... // from nodes of generic-  variables (1.)
-	//TabSym = new TabElement(id, VarId, /*free_address*/ treedeclaration, TabSym);
+	// set as global variable
+	TREE_STATIC(declaration) = true;
+	TREE_PUBLIC(declaration) = true;
+
+	// 								p->value ?
+	TabSym = new TabElement(id, VarId, declaration, TabSym);
+
 	free_address++;
 }
 
-int varAddr(char *id)
+tree varAddr(char *id)
 {
 	TabElement *p = searchId(id);
 
@@ -106,17 +116,17 @@ int varAddr(char *id)
 	}
 	else
 	{
-		return p->value;
+		return p->node;
 	}
 }
 
-TypeId varConstId(char *id, int *v)
+TypeId varConstId(char *id, tree *t)
 {
 	TabElement *p = searchId(id);
 
 	if (p)
 	{
-		*v = p->value;
+		*t = p->node;
 		return p->type;
 	}
 	error(id, "is not declared");

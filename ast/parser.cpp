@@ -205,7 +205,7 @@ Statm* Statement()
 	{
 	case IDENT:
 	{
-		Var *var = new Var(varAddr(Symb.ident),false);
+		Var *var = new Var(varAddr(Symb.ident));
 		Symb = readLexem();
 		Compare(ASSIGN, __LINE__);
 		return new Assign(var, Expression());
@@ -219,7 +219,7 @@ Statm* Statement()
 		Symb = readLexem();
 		char id[MAX_IDENT_LEN];
 		Compare_IDENT(id, __LINE__);
-		return new Read(new Var(varAddr(id), false));
+		return new Read(new Var(varAddr(id)));
 
 	case kwIF:
 	{

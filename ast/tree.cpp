@@ -62,10 +62,9 @@ tree Node::build_print_integer_expr (location_t loc, tree int_expr)
 	return call;
 }
 
-Var::Var(int a, bool rv)
+Var::Var(tree t)
 {
-	addr = a;
-	rvalue = rv;
+	node = t;
 }
 
 Numb::Numb (int v)
@@ -352,12 +351,15 @@ Node* Prog::Optimize()
 
 tree Var::Translate()
 {
+	return node;
+	/*
 	Gener(TA, addr);
 
 	if (rvalue)
 	{
 		Gener(DR);
 	}
+	*/
 }
 
 tree Numb::Translate()
@@ -432,9 +434,8 @@ tree UnMinus::Translate()
 
 tree Assign::Translate()
 {
-	var->Translate();
-	expr->Translate();
-	Gener(ST);
+	return build2(MODIFY_EXPR, integer_type_node, var->Translate(), expr->Translate());
+	//Gener(ST);
 }
 
 tree Write::Translate()
@@ -447,12 +448,13 @@ tree Write::Translate()
 tree Read::Translate()
 {
 	var->Translate();
-	Gener(RD);
-	Gener(ST);
+	//Gener(RD);
+	//Gener(ST);
 }
 
 tree If::Translate()
 {
+	/*
 	cond->Translate();
 	int a1 = Gener(IFJ);
 	thenstm->Translate();
@@ -467,17 +469,18 @@ tree If::Translate()
 	else
 	{
 		PutIC(a1);
-	}
+	}*/
 }
 
 tree While::Translate()
 {
+	/*
 	int a1 = GetIC();
 	cond->Translate();
 	int a2 = Gener(IFJ);
 	body->Translate();
 	Gener(JU, a1);
-	PutIC(a2);
+	PutIC(a2);*/
 }
 
 tree StatmList::Translate()
@@ -503,8 +506,8 @@ tree Prog::Translate()
 
 Expr* VarOrConst(char *id)
 {
-	int v;
-	TypeId druh = varConstId(id,&v); // aquires a tabsym, retrieves some value. retrieved not int but a tree
+	tree t;
+	TypeId druh = varConstId(id, &t); // aquires a tabsym, retrieves some value. retrieved not int but a tree
 
 
 
@@ -512,10 +515,10 @@ Expr* VarOrConst(char *id)
 	switch (druh)
 	{
 	case VarId:
-		return new Var(v, true);
-
 	case ConstId:
-		return new Numb(v);
+		return new Var(t);
+
+		//return new Numb(v);
 
 	default:
 		return 0;

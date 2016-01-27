@@ -1,7 +1,7 @@
 #include "ast/lexan.h"
 #include "ast/parser.h"
 #include "ast/tree.h"
-#include "ast/output.h"
+//#include "ast/output.h"
 #include "ast/tabsym.h"
 #include "ast/input.h"
 
@@ -210,6 +210,19 @@ void sfe_parse_input_files(const char * *filenames, unsigned filename_count)
 
 
 
+	TabElement *p = retTabSym();
+
+	while (p)
+	{
+		if (p->type == VarId)
+		{
+			register_global_variable_declaration(p->node);
+		}
+		p = p->next;
+	}
+
+
+
 	tree func_type_tree = build_function_type_list(integer_type_node, NULL_TREE);
 	tree func_decl_tree = build_decl(BUILTINS_LOCATION, FUNCTION_DECL, get_identifier("main"), func_type_tree);
 
@@ -229,6 +242,7 @@ void sfe_parse_input_files(const char * *filenames, unsigned filename_count)
 	DECL_INITIAL(func_decl_tree) = func_art_block_tree;
 
 	tree func_stmts_tree = alloc_stmt_list();
+
 
 
 
