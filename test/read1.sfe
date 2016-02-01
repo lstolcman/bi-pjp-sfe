@@ -1,0 +1,10 @@
+program read1;
+
+var a;
+begin
+	a:=123;
+	write a;
+	read a;
+	write a;
+end
+
