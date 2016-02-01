@@ -1,0 +1,16 @@
+program for2;
+
+var a;
+
+begin
+
+	for a:=10 downto 5 do 
+		write a;
+
+	write 999;
+
+	for a:=1 downto 5 do 
+		write a;
+
+end
+

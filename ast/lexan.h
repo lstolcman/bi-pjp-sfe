@@ -8,6 +8,7 @@ typedef enum {
 	EQ, NEQ, LT, GT, LTE, GTE, LPAR, RPAR, ASSIGN,
 	COMMA, SEMICOLON,
 	kwPROGRAM,
+	kwFOR, kwTO, kwDOWNTO,
 	kwVAR, kwCONST, kwBEGIN, kwEND, kwIF, kwTHEN, kwELSE,
 	kwWHILE, kwDO, kwWRITE, kwREAD,
 	EOI, ERR

@@ -239,6 +239,39 @@ Statm* Statement()
 		return new While(cond, Statement());
 	}
 
+	case kwFOR:
+	{
+		Symb = readLexem();
+
+		bool counting_up;
+		Expr *value1;
+		Expr *value2;
+
+		Var *var = new Var(varAddr(Symb.ident));
+		Symb = readLexem();
+		Compare(ASSIGN, __LINE__);
+		value1 = Expression();
+
+		switch (Symb.type)
+		{
+		case kwTO:
+			counting_up = true;
+			break;
+
+		case kwDOWNTO:
+			counting_up = false;
+			break;
+
+		default:
+			CompareError(Symb.type, __LINE__);
+		}
+		Symb = readLexem();
+		value2 = Expression();
+		Compare(kwDO, __LINE__);
+
+		return new For(var, value1, value2, Statement(), counting_up);
+	}
+
 	case kwBEGIN:
 		return CompoundStatement();
 

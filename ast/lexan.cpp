@@ -20,6 +20,7 @@ const char *symbTable[] = {
 	"EQ", "NEQ", "LT", "GT", "LTE", "GTE", "LPAR", "RPAR", "ASSIGN",
 	"COMMA", "SEMICOLON",
 	"kwPROGRAM",
+	"kwFOR", "kwTO", "kwDOWNTO",
 	"kwVAR", "kwCONST", "kwBEGIN", "kwEND", "kwIF", "kwTHEN", "kwELSE",
 	"kwWHILE", "kwDO", "kwWRITE", "kwREAD",
 	"EOI", "ERR"
@@ -73,6 +74,9 @@ const struct {const char *slovo;
 	      LexSymbolType symb;
 } keyWordTable[] = {
 	{"program", kwPROGRAM},
+	{"for", kwFOR},
+	{"to", kwTO},
+	{"downto", kwDOWNTO},
 	{"var", kwVAR},
 	{"const", kwCONST},
 	{"begin", kwBEGIN},

@@ -194,6 +194,23 @@ While::~While()
 	delete cond;
 }
 
+For::For(Var *v, Expr *v1, Expr *v2, Statm *b, bool c)
+{
+	var = v;
+	value1 = v1;
+	value2 = v2;
+	body = b;
+	counting_up = c;
+}
+
+For::~For()
+{
+	delete var;
+	delete value1;
+	delete value2;
+	delete body;
+}
+
 StatmList::StatmList(Statm *s, StatmList *n)
 {
 	statm = s;
@@ -361,6 +378,11 @@ Node* While::Optimize()
 		delete this;
 		return new Empty;
 	}
+	return this;
+}
+
+Node* For::Optimize()
+{
 	return this;
 }
 
@@ -542,6 +564,34 @@ tree While::Translate()
 	   body->Translate();
 	   Gener(JU, a1);
 	   PutIC(a2);*/
+}
+
+tree For::Translate()
+{
+	tree parent = alloc_stmt_list();
+	tree child = alloc_stmt_list();
+
+	// set variable to specified number (like in "assign")
+	// ex: for a := 3 to... => set a to 3
+	append_to_statement_list(build2(MODIFY_EXPR, integer_type_node, var->Translate(), value1->Translate()), &parent);
+
+	// build loop, like in "while"
+	if (counting_up)
+	{
+		append_to_statement_list( build1(EXIT_EXPR, void_type_node, build2(GT_EXPR, integer_type_node, var->Translate(), value2->Translate())), &child);
+		append_to_statement_list(body->Translate(), &child);
+		append_to_statement_list( build2(POSTINCREMENT_EXPR, integer_type_node, var->Translate(), build_int_cst(integer_type_node, 1)), &child);
+	}
+	else
+	{
+		append_to_statement_list( build1(EXIT_EXPR, void_type_node, build2(LT_EXPR, integer_type_node, var->Translate(), value2->Translate())), &child);
+		append_to_statement_list(body->Translate(), &child);
+		append_to_statement_list( build2(POSTDECREMENT_EXPR, integer_type_node, var->Translate(), build_int_cst(integer_type_node, 1)), &child);
+	}
+
+	append_to_statement_list(build1(LOOP_EXPR, void_type_node, child), &parent);
+
+	return parent;
 }
 
 tree StatmList::Translate()

@@ -139,6 +139,21 @@ public:
 	virtual tree Translate();
 };
 
+class For : public Statm
+{
+	Var *var;
+	Expr *value1;
+	Expr *value2;
+	Statm *body;
+	bool counting_up;
+
+public:
+	For(Var*, Expr*, Expr*, Statm*, bool);
+	virtual ~For();
+	virtual Node* Optimize();
+	virtual tree Translate();
+};
+
 class StatmList : public Statm
 {
 	Statm *statm;
