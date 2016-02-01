@@ -1,0 +1,21 @@
+program if2;
+
+var a;
+
+begin
+	read a;
+	if a  > 10 then
+	begin
+		write 1;
+		write 2;
+		write 3;
+	end
+	else
+	begin
+		write -1;
+		write -2;
+		write -3;
+	end
+
+end
+

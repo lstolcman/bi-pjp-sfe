@@ -486,31 +486,55 @@ tree Read::Translate()
 	//var->Translate();
 	//Gener(RD);
 	//Gener(ST);
-	return build_print_integer_expr(UNKNOWN_LOCATION, var->Translate());
+	return build_scan_integer(UNKNOWN_LOCATION, var->Translate());
 }
 
 tree If::Translate()
 {
-	/*
-	   cond->Translate();
-	   int a1 = Gener(IFJ);
-	   thenstm->Translate();
+	//cond->Translate();
+	//int a1 = Gener(IFJ);
+	//thenstm->Translate();
 
-	   if (elsestm)
-	   {
-	        int a2 = Gener(JU);
-	        PutIC(a1);
-	        elsestm->Translate();
-	        PutIC(a2);
-	   }
-	   else
-	   {
-	        PutIC(a1);
-	   }*/
+	if (elsestm)
+	{
+		return build3(COND_EXPR, void_type_node, cond->Translate(), thenstm->Translate(), elsestm->Translate());
+		//int a2 = Gener(JU);
+		//PutIC(a1);
+		//elsestm->Translate();
+		//PutIC(a2);
+	}
+	else
+	{
+		return build3(COND_EXPR, void_type_node, cond->Translate(), thenstm->Translate(), NULL_TREE);
+		//PutIC(a1);
+	}
 }
 
 tree While::Translate()
 {
+	tree func_stmts_tree = alloc_stmt_list();
+
+	// add exit condition
+	tree exit_condition = build1(TRUTH_NOT_EXPR, integer_type_node, cond->Translate());
+	append_to_statement_list(build1(EXIT_EXPR, void_type_node, exit_condition), &func_stmts_tree);
+	// add body of a while
+	append_to_statement_list(body->Translate(), &func_stmts_tree);
+
+
+/*
+        allocae stm list
+        add the exit stm to this list
+        add the body
+
+        stm list
+        add build1(EXIT_EXPR, void_type_node, cond->Translate());
+        add body->Translate()
+
+ */
+
+	return build1(LOOP_EXPR, void_type_node, func_stmts_tree);
+
+
 	/*
 	   int a1 = GetIC();
 	   cond->Translate();
